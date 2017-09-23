@@ -1,5 +1,5 @@
 class CountriesController < ApplicationController
-  before_action :set_country, only: [:show, :update, :destroy]
+  before_action :set_country, only: %i[update destroy]
 
   # GET /countries
   def index
