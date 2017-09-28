@@ -1,5 +1,5 @@
-class CountriesController < ApplicationController
-  before_action :set_country, only: %i[update destroy]
+class CountriesController < ProtectedController
+  before_action :set_country, only: [:update, :destroy]
 
   # GET /countries
   def index
@@ -15,7 +15,10 @@ class CountriesController < ApplicationController
 
   # POST /countries
   def create
+
     @country = Country.new(country_params)
+    # @country = current_user.countries.build(country_params)
+    @country.user = current_user
 
     if @country.save
       render json: @country, status: :created
@@ -39,13 +42,14 @@ class CountriesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_country
-      @country = Country.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def country_params
-      params.require(:country).permit(:name, :continent, :capital_city)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_country
+    @country = current_user.countries.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def country_params
+    params.require(:country).permit(:name, :continent, :capital_city)
+  end
 end
