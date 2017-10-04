@@ -3,7 +3,7 @@ class CountriesController < ProtectedController
 
   # GET /countries
   def index
-    @countries = Country.all
+    @countries = current_user.countries
 
     render json: @countries
   end
